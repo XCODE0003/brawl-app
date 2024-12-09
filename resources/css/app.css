@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+.gradient-element {
+    background: linear-gradient(180deg,
+            rgb(0, 0, 0) 17.345%,
+            rgb(255, 189, 32) 100%);
+    @apply h-[100px] w-full;
+}
+
+.min-h-full-available {
+    min-height: -webkit-fill-available;
+}
+
+.ellipse-blur {
+    filter: blur(100px);
+    @apply rounded-full opacity-60;
+}
+
+.task-friends-elements {
+    @apply flex gap-[15px] bg-gray py-[13px] px-[20px] rounded-[20px] items-center;
+}
+
+.task-friends-elements.massage {
+    @apply text-center block py-[17px];
+}
+
+.friends-elements {
+    @apply flex gap-[10px] rounded-[20px] items-center bg-gray p-[20px];
+}
+
+.friends-elements.message {
+    @apply text-center block py-[26px];
+}
+
+.active-page {
+    @apply -top-[18px] gap-2 relative;
+}
+
+.active-page img {
+    width: 48px;
+}
+
+.main-element {
+    @apply bg-black rounded-r-[45px] rounded-l-[45px] px-[27px] py-[27px] w-full relative -top-[2.5rem];
+}
+
+body {
+    background-color: black;
+    font-family: "Roboto", sans-serif;
+    width: 100%;
+    display: grid;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    @apply opacity-50;
+}
+
+button:not(:disabled) {
+    cursor: pointer;
+    @apply transition-all duration-300 hover:opacity-80;
+}
+
+.btn {
+    max-width: 250px;
+    @apply rounded-full text-lg py-2.5 w-full;
+}
+
+.btn-gold {
+    @apply bg-gold text-black;
+}
+
+.btn-dark {
+    @apply text-white/60;
+    background-color: #222222;
+}
+
+.loader {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid #ffffff73;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+.loader-small {
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid #000000;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

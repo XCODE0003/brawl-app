@@ -1,0 +1,31 @@
+<script setup>
+import Footer from '@/Components/Footer.vue';
+import { ModalsContainer } from 'vue-final-modal'
+import FriendModal from '@/Components/Modals/FriendModal.vue'
+import TaskModal from '@/Components/Modals/TaskModal.vue'
+</script>
+
+<template>
+
+    <transition appear name="fade" mode="out-in">
+        <div :key="$page.url" class="container min-h-[80vh] mx-auto">
+            <slot />
+        </div>
+    </transition>
+    <Footer />
+    <FriendModal />
+    <TaskModal />
+    <ModalsContainer />
+</template>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+</style>
