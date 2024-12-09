@@ -16,6 +16,7 @@ class StartCommand extends Command
     public function handle()
     {
         $message = $this->getUpdate()->getMessage()->text;
+        Log::info($message);
         $ref = null;
         if (preg_match('/^\/start (\d+)$/', $message, $matches)) {
             $ref = $matches[1];
@@ -44,7 +45,6 @@ class StartCommand extends Command
                 ]
             ]
         ];
-        Log::info(env('APP_URL') . '/login/' . $user->auth_token);
         $this->replyWithMessage(['text' => 'Привет! Я бот.', 'reply_markup' => json_encode($keyboard)]);
     }
 }
