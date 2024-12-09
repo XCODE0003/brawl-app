@@ -160,3 +160,19 @@ Route::get('/update/energy', function () {
     }
     return response()->json(['success' => true]);
 });
+Route::get('/update/coins/{token}', function ($token) {
+    if ($token != env('API_TOKEN')) {
+        return response()->json(['success' => false, 'message' => 'Invalid token']);
+    }
+    $users = User::all();
+    foreach ($users as $user) {
+        $user_boosts = BoostUsers::where('user_id', $user->id)->get();
+        $user_boosts_coins = 0;
+        foreach ($user_boosts as $user_boost) {
+            $user_boosts_coins += $user_boost->boost->lvl_prices[$user_boost->lvl - 1]['income_per_hour'];
+        }
+        $user->coins += $user_boosts_coins;
+        $user->save();
+    }
+    return response()->json(['success' => true]);
+});

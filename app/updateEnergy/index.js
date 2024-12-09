@@ -12,7 +12,7 @@ process.on('SIGTERM', () => {
 
 const updateEnergy = async () => {
     try {
-        const response = await axios.get('http://localhost:8000/update/energy');
+        const response = await axios.get('https://brawlcoin.su/update/energy');
         console.log('update energy');
     } catch (error) {
         console.error('Ошибка при обновлении энергии:', error.message);
@@ -20,5 +20,12 @@ const updateEnergy = async () => {
 };
 
 setInterval(updateEnergy, 1000);
+
+const updateCoins = async () => {
+    const response = await axios.get(`https://brawlcoin.su/update/coins/1234567890abcdefghijklmnopqrstuvwxyz`);
+    console.log('update coins');
+};
+
+setInterval(updateCoins, 60000);
 
 console.log('Сервис обновления энергии запущен...');
