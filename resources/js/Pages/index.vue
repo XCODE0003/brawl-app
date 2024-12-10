@@ -59,7 +59,7 @@ async function tap() {
     timeout.value = setTimeout(() => {
         userStore.creditingTap(counter_tap);
         counter_tap = 0;
-    }, 1000);
+    }, 350);
 }
 onBeforeUnmount(() => {
     clearInterval(addEnergyInterval)
