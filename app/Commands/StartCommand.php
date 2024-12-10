@@ -21,11 +21,11 @@ class StartCommand extends Command
             $ref = $matches[1];
         }
         $auth_token = bin2hex(random_bytes(16));
-        $user = User::where('tg_id', $this->getUpdate()->getMessage()->from->id)->first();
+        $user = User::where('tg_id', $message->from->id)->first();
         if (!$user) {
             $user = User::create([
-                'tg_id' => $this->getUpdate()->getMessage()->from->id,
-                'username' => $this->getUpdate()->getMessage()->from->username,
+                'tg_id' => $message->from->id,
+                'username' => $message->from->username,
                 'referral_code' => $ref === $user->tg_id ? null : $ref,
                 'auth_token' => $auth_token,
             ]);
