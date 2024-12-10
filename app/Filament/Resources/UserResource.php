@@ -33,7 +33,11 @@ class UserResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('referral_code')
                     ->label('Реферал')
-                    ->options(User::all()->pluck('username', 'tg_id'))
+                    ->options(
+                        User::whereNotNull('username')
+                            ->pluck('username', 'tg_id')
+                            ->toArray()
+                    )
                     ->searchable(),
                 Forms\Components\TextInput::make('coins')
                     ->label('Монеты')
