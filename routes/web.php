@@ -30,15 +30,15 @@ use App\Models\Shop;
 
 Route::get('/login/{token?}', function ($token = null) {
     $user_os = request()->header('User-Agent');
-    // if (strpos($user_os, 'Mobile') === false) {
-    //     return Inertia::render('mobile');
-    // }
+    if (strpos($user_os, 'Mobile') === false) {
+        return Inertia::render('mobile');
+    }
 
     if (!$token) {
         return 'Token is required';
     }
     $user = User::where('auth_token', $token)->first();
-    if ($user && auth()->user()->tg_id === $user->tg_id || auth()->check()) {
+    if ($user && auth()->check() && auth()->user()->tg_id === $user->tg_id) {
         return redirect('/');
     }
 
