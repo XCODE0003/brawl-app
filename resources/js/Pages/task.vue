@@ -4,6 +4,7 @@ import { formatNumber } from '@/util/format';
 import { useTaskModalStore } from '@/Stores/Modals/TaskModalStore';
 import { useTaskStore } from '@/Stores/TaskStore';
 import { onMounted } from 'vue';
+import { useUserStore } from '@/Stores/UserStore';
 
 const useTaskModal = useTaskModalStore()
 const taskStore = useTaskStore()
@@ -11,6 +12,8 @@ const taskStore = useTaskStore()
 const props = defineProps({
     tasks: Array,
     tasks_daily: Array,
+    user: Object,
+
 });
 
 onMounted(() => {

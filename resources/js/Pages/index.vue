@@ -24,6 +24,17 @@ addEnergyInterval = setInterval(() => {
     }
 }, 1000);
 let counter_tap = 0;
+const isPressed = ref(false);
+
+function handleTouchStart() {
+    isPressed.value = true;
+}
+
+function handleTouchEnd() {
+    isPressed.value = false;
+    tap();
+}
+
 async function tap() {
     if (userStore.user.energy <= 0) return;
     clearTimeout(timeout.value);
@@ -70,15 +81,16 @@ onBeforeUnmount(() => {
                 </Link>
             </div>
             <div class="flex-col flex gap-5 overflow-auto h-full justify-between">
-                <div class="flex flex-col gap-[70px]">
-                    <div class="flex flex-col gap-11">
+                <div class="flex flex-col gap-[20px]">
+                    <div class="flex flex-col gap-5">
                         <div class="flex gap-2 text-4xl font-bold text-white justify-center">
                             <img class="w-10" src="assets/img/image2.png" alt="">
                             {{ Number(user.coins).toLocaleString('ru-RU', { useGrouping: true }) }}
                         </div>
                         <div class="justify-center flex items-center">
-                            <img @click="tap" class="w-80 relative active:translate-y-1 z-10"
-                                src="assets/img/image2.png" alt="">
+                            <img style="touch-action: pan-y;" @click="tap" @touchstart="handleTouchStart"
+                                @touchend="handleTouchEnd" :class="{ 'translate-y-1': isPressed }"
+                                class="w-64 relative z-10" src="assets/img/image2.png" alt="">
                             <span class="ellipse-blur w-48 h-48 bg-yellow  absolute z-0"></span>
                         </div>
                     </div>

@@ -7,7 +7,8 @@ const userStore = useUserStore();
 const props = defineProps({
     user: Object,
     friends: Array,
-    setting: Object
+    setting: Object,
+    friend: Object
 })
 
 userStore.setUser(props.user);
@@ -50,7 +51,7 @@ userStore.setUser(props.user);
                 </div>
                 <div v-if="userStore.user.referral_code"
                     class="task-friends-elements massage text-xs font-light text-white">
-                    Вы уже являетесь рефералом, приглашенным <span class="text-yellow">Humos</span>
+                    Вы уже являетесь рефералом, приглашенным <span class="text-yellow">{{ friend.username }}</span>
                 </div>
             </div>
             <div class="flex-col flex gap-5 overflow-auto h-full justify-between">

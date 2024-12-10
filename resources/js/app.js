@@ -16,6 +16,13 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
+    progress: {
+        delay: 100,
+        color: '#FFD100',
+        includeCSS: true,
+        showProgressBar: false,
+        showSpinner: true,
+    },
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
@@ -24,8 +31,5 @@ createInertiaApp({
             .use(pinia)
             .use(vfm)
             .mount(el);
-    },
-    progress: {
-        color: '#4B5563',
     },
 });

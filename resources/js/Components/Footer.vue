@@ -11,8 +11,8 @@ const userStore = useUserStore();
 
 <template>
 
-    <footer class="sticky container pb-10 px-[27px] mx-auto bottom-0 z-20 gap-6 flex flex-col">
-        <div :class="activePage === 'friend' ? 'flex gap-2' : 'hidden'">
+    <footer class="sticky container pb-5 px-[27px] mx-auto bottom-0 z-20 gap-6 flex flex-col">
+        <div v-if="activePage === 'friend'" class="flex gap-2">
             <a :href="userStore.shareLink()"
                 class="p-[19px] flex gap-[10px] justify-center text-sm font-semibold w-full bg-yellow items-center rounded-[15px]">
                 Пригласить друга

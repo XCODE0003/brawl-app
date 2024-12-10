@@ -10,6 +10,8 @@
     @apply h-[100px] w-full;
 }
 
+
+
 .min-h-full-available {
     min-height: -webkit-fill-available;
 }
@@ -89,6 +91,17 @@ button:not(:disabled) {
     animation: rotation 1s linear infinite;
 }
 
+.loader-white {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #ffffff73;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
 .loader-small {
     width: 10px;
     height: 10px;
@@ -98,7 +111,6 @@ button:not(:disabled) {
     display: inline-block;
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
-
 }
 
 @keyframes rotation {
@@ -109,4 +121,17 @@ button:not(:disabled) {
     100% {
         transform: rotate(360deg);
     }
+}
+
+#nprogress .bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+}
+
+#nprogress .spinner {
+    top: calc(50% - 50px) !important;
+    right: 50% !important;
 }

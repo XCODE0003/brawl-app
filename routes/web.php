@@ -27,6 +27,9 @@ use App\Models\Shop;
 */
 
 Route::get('/login/{token?}', function ($token = null) {
+    if (auth()->check()) {
+        return redirect('/');
+    }
     if (!$token) {
         return 'Token is required';
     }
@@ -36,7 +39,7 @@ Route::get('/login/{token?}', function ($token = null) {
     }
     $user->auth_token = null;
     $user->save();
-    auth()->login($user);
+    auth()->login($user, true);
     return redirect('/');
 })->name('login');
 
@@ -51,7 +54,11 @@ Route::middleware('auth')->group(function () {
         $user = auth()->user();
         $setting = Setting::first();
         $friends = User::where('referral_code', $user->tg_id)->get();
-        return Inertia::render('friend', ['user' => $user, 'friends' => $friends, 'setting' => $setting]);
+        $friend = null;
+        if ($user->referral_code) {
+            $friend = User::where('tg_id', $user->referral_code)->select('username')->first();
+        }
+        return Inertia::render('friend', ['user' => $user, 'friends' => $friends, 'setting' => $setting, 'friend' => $friend]);
     })->name('friend');
 
     Route::get('/task', function () {
@@ -59,7 +66,7 @@ Route::middleware('auth')->group(function () {
         $tasks_completed = TaksCompleted::where('user_id', $user->id)->get();
         $tasks = Task::where('is_daily', false)->whereNotIn('id', $tasks_completed->pluck('task_id'))->get();
         $tasks_daily = Task::where('is_daily', true)->whereNotIn('id', $tasks_completed->pluck('task_id'))->get();
-        return Inertia::render('task', ['tasks' => $tasks, 'tasks_daily' => $tasks_daily]);
+        return Inertia::render('task', ['tasks' => $tasks, 'tasks_daily' => $tasks_daily, 'user' => $user]);
     })->name('task');
 
     Route::get('/shop', function () {

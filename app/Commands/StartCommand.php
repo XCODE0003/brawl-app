@@ -16,7 +16,6 @@ class StartCommand extends Command
     public function handle()
     {
         $message = $this->getUpdate()->getMessage()->text;
-        Log::info($message);
         $ref = null;
         if (preg_match('/^\/start (\d+)$/', $message, $matches)) {
             $ref = $matches[1];
@@ -27,7 +26,7 @@ class StartCommand extends Command
             $user = User::create([
                 'tg_id' => $this->getUpdate()->getMessage()->from->id,
                 'username' => $this->getUpdate()->getMessage()->from->username,
-                'referral_code' => $ref,
+                'referral_code' => $ref === $user->tg_id ? null : $ref,
                 'auth_token' => $auth_token,
             ]);
         }

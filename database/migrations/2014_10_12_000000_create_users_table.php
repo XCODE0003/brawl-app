@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('auth_token')->nullable();
             $table->integer('energy')->default(500);
             $table->integer('energy_max')->default(500);
-
+            $table->rememberToken();
             $table->timestamps();
         });
     }
