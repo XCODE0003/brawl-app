@@ -61,8 +61,8 @@ userStore.setUser(props.user);
                         <img class="h-[14px]" src="assets/img/image9.png" alt="">
                     </div>
                     <div class="flex flex-col gap-[10px] overflow-auto">
-                        <div v-if="props.friends.length > 0" class="friends-elements">
-                            <span v-for="friend in props.friends" class="text-sm font-medium text-white">
+                        <div v-if="props.friends.length > 0" v-for="friend in props.friends" class="friends-elements">
+                            <span class="text-sm font-medium text-white">
                                 {{ friend.username }}
                             </span>
                         </div>
