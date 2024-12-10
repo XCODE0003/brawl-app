@@ -13,7 +13,7 @@ const boosts_users = ref(props.boost_users)
 const userStore = useUserStore()
 userStore.setUser(props.user)
 async function buyBoost(boost_id) {
-    if (getBoostPriceInfoById(boost_id).value.price >= parseInt(userStore.user.coins)) {
+    if (getBoostPriceInfoById(boost_id).value.price > parseInt(userStore.user.coins)) {
         alert('Недостаточно монет')
         return
     }
