@@ -30,9 +30,9 @@ use App\Models\Shop;
 
 Route::get('/login/{token?}', function ($token = null) {
     $user_os = request()->header('User-Agent');
-    if (strpos($user_os, 'Mobile') === false) {
-        return Inertia::render('mobile');
-    }
+    // if (strpos($user_os, 'Mobile') === false) {
+    //     return Inertia::render('mobile');
+    // }
 
     if (!$token) {
         return 'Token is required';
@@ -121,21 +121,23 @@ Route::middleware('auth')->group(function () {
             $boost_user->user_id = $user->id;
             $boost_user->boost_id = $boost_id;
             $boost_user->lvl = 1;
+
             $boost_price = $boost->lvl_prices[0]['price'];
         } else {
             $boost_price = $boost->lvl_prices[$boost_user->lvl - 1]['price'];
             $max_lvl = count($boost->lvl_prices);
+            if ($user->coins < $boost_price) {
+                return response()->json(['success' => false, 'message' => 'Недостаточно монет']);
+            }
             if ($boost_user->lvl < $max_lvl) {
                 $boost_price = $boost->lvl_prices[$boost_user->lvl]['price'];
                 $boost_user->lvl++;
-                $user->coins -= $boost_price;
+
                 $boost_user->save();
             }
         }
 
-        if ($user->coins < $boost_price) {
-            return response()->json(['success' => false, 'message' => 'Недостаточно монет']);
-        }
+
         $user->coins -= $boost_price;
         $user->save();
         $boost_user->save();
