@@ -24,7 +24,7 @@ export const useUserStore = defineStore('user', {
             this.user = user
         },
         shareLink: function () {
-            return `https://t.me/share/url?url=${this.refLink()}&text=Забирай бесплатные гемы уже сегодня в новом кликере от разработчиков 👇`
+            return `https://t.me/share/url?url=&text=Забирай бесплатные гемы уже сегодня в новом кликере от разработчиков 👇 ${this.refLink()}`
         },
         refLink() {
             return `https://t.me/brawlcoin_robot?start=${this.user.tg_id}`
