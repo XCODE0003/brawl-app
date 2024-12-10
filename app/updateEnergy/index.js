@@ -22,8 +22,12 @@ const updateEnergy = async () => {
 setInterval(updateEnergy, 1000);
 
 const updateCoins = async () => {
-    const response = await axios.get(`https://brawlcoin.su/update/coins/1234567890abcdefghijklmnopqrstuvwxyz`);
-    console.log('update coins');
+    try {
+        const response = await axios.get(`https://brawlcoin.su/update/coins/1234567890abcdefghijklmnopqrstuvwxyz`);
+        console.log('update coins');
+    } catch (error) {
+        console.error('Ошибка при обновлении монет:', error.message);
+    }
 };
 
 setInterval(updateCoins, 60000);

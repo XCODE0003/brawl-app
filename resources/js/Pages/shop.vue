@@ -39,7 +39,7 @@ FriendStore.friends = props.friends;
                 <div v-for="item in items" class="flex flex-col gap-[10px]">
                     <div class="px-[17px] py-[8px] rounded-[18px] bg-gray flex justify-between">
                         <div class="flex gap-[26px] items-center">
-                            <img class="w-[35px]" src="assets/img/image19.png" alt="">
+                            <img class="w-[35px] h-[35px]" :src="`/storage/${item.image}`" alt="">
                             <div class="flex flex-col items-start justify-start gap-[11px]">
                                 <span class=" font-semibold text-white">
                                     {{ item.title }}

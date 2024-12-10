@@ -12,5 +12,6 @@ class StatLink extends Model
     protected $fillable = [
         'name',
         'count_start',
+        'link',
     ];
 }

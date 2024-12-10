@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('count_start')->default(0);
+            $table->string('link')->default('link');
             $table->timestamps();
         });
     }

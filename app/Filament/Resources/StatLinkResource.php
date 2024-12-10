@@ -40,8 +40,9 @@ class StatLinkResource extends Resource
                 Tables\Columns\TextColumn::make('count_start')
                     ->label('Кол-во запусков количество'),
                 Tables\Columns\TextColumn::make('link')
+                    ->color('success')
                     ->label('Ссылка')
-                    ->formatStateUsing(fn(string $state): string => '/?rekl_start=' . $state)
+                    ->formatStateUsing(fn(StatLink $record): string => "https://t.me/brawlcoin_robot?start={$record->id}")
                     ->copyable(),
             ])
             ->filters([
