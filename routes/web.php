@@ -45,8 +45,8 @@ Route::get('/login/{token?}', function ($token = null) {
     if (!$user) {
         return 'User not found';
     }
-    $user->auth_token = null;
-    $user->save();
+    // $user->auth_token = null;
+    // $user->save();
     auth()->login($user, true);
     return redirect('/');
 })->name('login');

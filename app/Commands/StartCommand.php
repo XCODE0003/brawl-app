@@ -51,8 +51,8 @@ class StartCommand extends Command
                 $user->save();
             }
         }
-        $user->auth_token = $auth_token;
-        $user->save();
+        // $user->auth_token = $auth_token;
+        // $user->save();
         $keyboard = [
             'inline_keyboard' => [
                 [
