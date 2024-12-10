@@ -26,7 +26,13 @@ use App\Models\Shop;
 |
 */
 
+
+
 Route::get('/login/{token?}', function ($token = null) {
+    $user_os = request()->header('User-Agent');
+    if (strpos($user_os, 'Mobile') === false) {
+        return Inertia::render('mobile');
+    }
     if (auth()->check()) {
         return redirect('/');
     }

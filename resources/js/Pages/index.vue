@@ -124,3 +124,8 @@ onBeforeUnmount(() => {
         </main>
     </MainLayout>
 </template>
+<style>
+body {
+    overflow: hidden;
+}
+</style>
