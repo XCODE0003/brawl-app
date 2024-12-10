@@ -11,6 +11,6 @@ class RefUser extends Widget
 
     public function getRefUsers()
     {
-        return User::where('referral_code', auth()->user()->id)->get()->count();
+        return User::where('referral_code', '!=', null)->get()->count();
     }
 }
