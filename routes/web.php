@@ -38,7 +38,7 @@ Route::get('/login/{token?}', function ($token = null) {
         return 'Token is required';
     }
     $user = User::where('auth_token', $token)->first();
-    if (auth()->check() && $user && auth()->user()->id === $user->id) {
+    if ($user && auth()->user()->tg_id === $user->tg_id || auth()->check()) {
         return redirect('/');
     }
 
