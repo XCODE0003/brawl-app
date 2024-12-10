@@ -25,14 +25,19 @@ addEnergyInterval = setInterval(() => {
 }, 1000);
 let counter_tap = 0;
 const isPressed = ref(false);
+let tapExecuted = false;
 
 function handleTouchStart() {
     isPressed.value = true;
+    tapExecuted = false;
 }
 
 function handleTouchEnd() {
     isPressed.value = false;
-    tap();
+    if (!tapExecuted) {
+        tap();
+        tapExecuted = true;
+    }
 }
 
 async function tap() {
