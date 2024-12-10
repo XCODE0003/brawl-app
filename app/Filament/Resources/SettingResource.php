@@ -8,6 +8,7 @@ use App\Models\Setting;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use App\Models\User;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -45,11 +46,27 @@ class SettingResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])
+
+            ])->headerActions(
+                [Tables\Actions\Action::make('reset')
+                    ->label('Рассылка')
+                    ->form([
+                        Forms\Components\MarkdownEditor::make('message')
+                            ->label('Сообщение')
+                            ->required(),
+                    ], 'sm')
+                    ->action(function ($data) {
+                        User::all()->each(function ($user) use ($data) {
+                            $user->sendMessage($data['message']);
+                        });
+                    }),]
+            )
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+
                 ]),
+
             ]);
     }
 

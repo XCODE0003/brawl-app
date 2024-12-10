@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class User extends Authenticatable
 {
@@ -28,4 +29,13 @@ class User extends Authenticatable
         'energy',
         'energy_max',
     ];
+
+    public function sendMessage($message)
+    {
+        Telegram::sendMessage([
+            'chat_id' => $this->tg_id,
+            'text' => $message,
+            'parse_mode' => 'MarkdownV2',
+        ]);
+    }
 }

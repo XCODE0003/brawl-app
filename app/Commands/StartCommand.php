@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\StatLink;
 use Telegram\Bot\Keyboard\Keyboard;
+use App\Models\Setting;
 
 
 class StartCommand extends Command
@@ -17,11 +18,13 @@ class StartCommand extends Command
     public function handle()
     {
         $message = $this->getUpdate()->getMessage()->text;
-        Log::info($message);
+        $setting = Setting::first();
         $ref = null;
         if (preg_match('/^\/start (\d+)$/', $message, $matches)) {
             $user = User::where('tg_id', $matches[1])->first();
             if ($user) {
+                $user->coins += $setting->bonus_start;
+                $user->save();
                 $ref = $matches[1];
             } else {
                 $stat = StatLink::where('id', $matches[1])->first();
@@ -40,6 +43,10 @@ class StartCommand extends Command
                 'auth_token' => $auth_token,
             ]);
             if ($ref) {
+
+                $user->coins += $setting->bonus_start;
+                $user->save();
+
                 $user->referral_code = $ref === $user->tg_id ? null : $ref;
                 $user->save();
             }
