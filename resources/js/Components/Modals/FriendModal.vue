@@ -1,9 +1,10 @@
 <script setup>
 import { useFriendModalStore } from '@/Stores/Modals/FriendStore'
+import { useUserStore } from '@/Stores/UserStore'
 import { VueFinalModal } from 'vue-final-modal'
 import { declension } from '@/util/format'
 const useFriendModal = useFriendModalStore()
-
+const userStore = useUserStore()
 
 </script>
 
@@ -24,7 +25,7 @@ const useFriendModal = useFriendModalStore()
             <p class="text-xl">Вам осталось позвать {{ declension(useFriendModal.calculateRemainingFriends(), ['друг',
                 'друга', 'друзей']) }} </p>
             <div class="flex flex-col gap-2.5 w-full justify-center items-center">
-                <button class="btn btn-gold ">Поделится</button>
+                <a :href="userStore.shareLink()" class="btn btn-gold ">Поделится</a>
                 <button @click="useFriendModal.closeModal" class="btn btn-dark">Закрыть</button>
             </div>
         </div>
