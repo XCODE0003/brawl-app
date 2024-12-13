@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { useUserStore } from '@/Stores/UserStore';
 import { ref } from 'vue';
 import { formatNumber } from '@/util/format';
+import { toast } from 'vue3-toastify'
 const props = defineProps({
     boosts: Array,
     boost_users: Array,
@@ -14,7 +15,7 @@ const userStore = useUserStore()
 userStore.setUser(props.user)
 async function buyBoost(boost_id) {
     if (getBoostPriceInfoById(boost_id).value.price > parseInt(userStore.user.coins)) {
-        alert('Недостаточно монет')
+        toast.error('Недостаточно монет')
         return
     }
     const response = await userStore.buyBoost(boost_id)
@@ -24,7 +25,7 @@ async function buyBoost(boost_id) {
         boosts_users.value = response.boost_user
     }
     else {
-        alert(response.message)
+        toast.error(response.message)
     }
 }
 const boostLevels = computed(() => {

@@ -105,7 +105,7 @@ onBeforeUnmount(() => {
                         <div class="justify-center flex items-center">
                             <img style="touch-action: pan-y;" @click="handleClick" @touchstart="handleTouchStart"
                                 @touchend="handleTouchEnd" :class="{ 'translate-y-1': isPressed }"
-                                class="max-w-80 active:translate-y-1 flex-1 relative z-10" src="assets/img/image2.png"
+                                class="xs:max-w-72 max-w-80 active:translate-y-1 flex-1 relative z-10" src="assets/img/image2.png"
                                 alt="">
                             <span class="ellipse-blur w-48 h-48 bg-yellow  absolute z-0"></span>
                         </div>

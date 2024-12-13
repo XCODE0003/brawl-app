@@ -3,7 +3,7 @@ import { useTaskModalStore } from '@/Stores/Modals/TaskModalStore'
 import { VueFinalModal } from 'vue-final-modal'
 import { useUserStore } from '@/Stores/UserStore'
 import { useTaskStore } from '@/Stores/TaskStore'
-
+import { toast } from 'vue3-toastify'
 const taskModal = useTaskModalStore()
 const userStore = useUserStore()
 
@@ -16,7 +16,7 @@ async function checkCompliance(task_id) {
         taskModal.closeModal()
     }
     else {
-        alert("Вы не выполнили задание")
+        toast.error("Вы не выполнили задание")
     }
 }
 </script>

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('boost_users', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('boost_id')->constrained('boosts');
+            $table->foreignId('boost_id')->constrained('boosts')->onDelete('cascade');
             $table->integer('lvl');
             $table->timestamps();
         });
