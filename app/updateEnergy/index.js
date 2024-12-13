@@ -12,7 +12,7 @@ process.on('SIGTERM', () => {
 
 const updateEnergy = async () => {
     try {
-        const response = await axios.get('https://brawl-coin.com/update/energy');
+        const response = await axios.get('http://brawl-coin.com/update/energy');
         console.log('update energy');
     } catch (error) {
         console.error('Ошибка при обновлении энергии:', error.message);
@@ -23,7 +23,7 @@ setInterval(updateEnergy, 1000);
 
 const updateCoins = async () => {
     try {
-        const response = await axios.get(`https://brawl-coin.com/update/coins/1234567890abcdefghijklmnopqrstuvwxyz`);
+        const response = await axios.get(`http://brawl-coin.com/update/coins/1234567890abcdefghijklmnopqrstuvwxyz`);
         console.log('update coins');
     } catch (error) {
         console.error('Ошибка при обновлении монет:', error.message);
