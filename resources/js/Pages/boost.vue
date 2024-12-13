@@ -5,10 +5,12 @@ import { useUserStore } from '@/Stores/UserStore';
 import { ref } from 'vue';
 import { formatNumber } from '@/util/format';
 import { toast } from 'vue3-toastify'
+import { onBeforeUnmount } from 'vue';
 const props = defineProps({
     boosts: Array,
     boost_users: Array,
-    user: Object
+    user: Object,
+    total_income: Number
 });
 const boosts_users = ref(props.boost_users)
 const userStore = useUserStore()
@@ -51,6 +53,17 @@ const getBoostPriceInfo = (boost) => {
         return boost.lvl_prices[level];
     });
 };
+let addEnergyInterval = null;
+addEnergyInterval = setInterval(() => {
+  
+    if(props.total_income > 0){
+        const income_per_second = props.total_income / 3600;
+        userStore.addCoins(income_per_second);
+    }
+}, 1000);
+onBeforeUnmount(() => {
+    clearInterval(addEnergyInterval)
+})
 </script>
 <template>
     <MainLayout>
@@ -62,7 +75,7 @@ const getBoostPriceInfo = (boost) => {
         <main class="flex  flex-col main-element z-10 gap-[27px]">
             <div class="flex gap-2 text-4xl font-bold text-white justify-center">
                 <img class="w-10" src="assets/img/image2.png" alt="">
-                {{ Number(userStore.user.coins).toLocaleString('ru-RU', { useGrouping: true }) }}
+                {{ Math.floor(Number(userStore.user.coins)).toLocaleString('ru-RU', { useGrouping: true }) }}
             </div>
             <div class="flex-col flex gap-5 overflow-auto h-full justify-between">
                 <div class="flex flex-col gap-[10px]">

@@ -86,7 +86,8 @@ Route::middleware('auth')->group(function () {
         $boosts = (new GetBoost())->execute(auth()->user()->id);
         $boost_users = BoostUsers::where('user_id', auth()->user()->id)->get()->toArray();
         $user = auth()->user();
-        return Inertia::render('boost', ['boosts' => $boosts, 'boost_users' => $boost_users, 'user' => $user]);
+        $total_income = (new GetTotalIncome())->execute($user->id);
+        return Inertia::render('boost', ['boosts' => $boosts, 'boost_users' => $boost_users, 'user' => $user, 'total_income' => $total_income]);
     })->name('boost');
 
     Route::post('/task/check', function (Request $request) {
@@ -188,7 +189,8 @@ Route::get('/update/coins/{token}', function ($token) {
         foreach ($user_boosts as $user_boost) {
             $user_boosts_coins += $user_boost->boost->lvl_prices[$user_boost->lvl - 1]['income_per_hour'];
         }
-        $user->coins += $user_boosts_coins;
+        $coin_per_second = $user_boosts_coins / 3600;
+        $user->coins += $coin_per_second;
         $user->save();
     }
     return response()->json(['success' => true]);

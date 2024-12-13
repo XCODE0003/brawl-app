@@ -6,7 +6,8 @@ export const useUserStore = defineStore('user', {
         user: null,
         isAuthenticated: false,
         loading: false,
-        error: null
+        error: null,
+        coinsFraction: 0
     }),
 
     getters: {
@@ -51,7 +52,9 @@ export const useUserStore = defineStore('user', {
         },
 
         addCoins(coins) {
-            this.user.coins = parseInt(this.user.coins) + parseInt(coins)
+            const newTotal = parseFloat(this.user.coins) + parseFloat(coins) + this.coinsFraction;
+            this.user.coins = Math.floor(newTotal);
+            this.coinsFraction = newTotal - Math.floor(newTotal);
         },
 
         addEnergy(energy) {

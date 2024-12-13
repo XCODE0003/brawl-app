@@ -30,6 +30,6 @@ const updateCoins = async () => {
     }
 };
 
-setInterval(updateCoins, 60000);
+setInterval(updateCoins, 1000);
 
 console.log('Сервис обновления энергии запущен...');

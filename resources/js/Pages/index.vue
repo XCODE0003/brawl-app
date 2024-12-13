@@ -22,6 +22,10 @@ addEnergyInterval = setInterval(() => {
     if (userStore.user.energy < userStore.user.energy_max) {
         userStore.addEnergy(1);
     }
+    if(props.total_income > 0){
+        const income_per_second = props.total_income / 3600;
+        userStore.addCoins(income_per_second);
+    }
 }, 1000);
 let counter_tap = 0;
 const isPressed = ref(false);
@@ -87,7 +91,7 @@ onBeforeUnmount(() => {
                     </span>
                     <div class="flex gap-1 items-center text-white text-sm font-normal">
                         <img class="w-5" src="assets/img/image2.png" alt="">
-                        {{ total_income }}
+                        {{ Math.floor(total_income) }}
                     </div>
                 </div>
                 <Link href="/boost"
@@ -100,7 +104,7 @@ onBeforeUnmount(() => {
                     <div class="flex flex-col gap-5">
                         <div class="flex gap-2 text-4xl font-bold text-white justify-center">
                             <img class="w-10" src="assets/img/image2.png" alt="">
-                            {{ Number(user.coins).toLocaleString('ru-RU', { useGrouping: true }) }}
+                            {{ Math.floor(Number(user.coins)).toLocaleString('ru-RU', { useGrouping: true }) }}
                         </div>
                         <div class="justify-center flex items-center">
                             <img style="touch-action: pan-y;" @click="handleClick" @touchstart="handleTouchStart"
