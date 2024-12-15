@@ -162,6 +162,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/generate/token/{user_id}', function ($user_id) {
     $token = bin2hex(random_bytes(16));
     $user = User::find($user_id);
+    dd($user_id, $user);
+
     $user->auth_token = $token;
     $user->save();
     return redirect(env('APP_URL') . '/login/' . $token);
