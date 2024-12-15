@@ -22,7 +22,7 @@ addEnergyInterval = setInterval(() => {
     if (userStore.user.energy < userStore.user.energy_max) {
         userStore.addEnergy(1);
     }
-    if(props.total_income > 0){
+    if (props.total_income > 0) {
         const income_per_second = props.total_income / 3600;
         userStore.addCoins(income_per_second);
     }
@@ -109,8 +109,8 @@ onBeforeUnmount(() => {
                         <div class="justify-center flex items-center">
                             <img style="touch-action: pan-y;" @click="handleClick" @touchstart="handleTouchStart"
                                 @touchend="handleTouchEnd" :class="{ 'translate-y-1': isPressed }"
-                                class="xs:max-w-72 max-w-80 active:translate-y-1 flex-1 relative z-10" src="assets/img/image2.png"
-                                alt="">
+                                class="xs:max-w-72 max-w-[40vh] active:translate-y-1 flex-1 relative z-10"
+                                src="assets/img/image2.png" alt="">
                             <span class="ellipse-blur w-48 h-48 bg-yellow  absolute z-0"></span>
                         </div>
                     </div>
