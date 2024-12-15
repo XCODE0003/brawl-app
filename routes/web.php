@@ -161,8 +161,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/generate/token/{user_id}', function ($user_id) {
     $token = bin2hex(random_bytes(16));
-    $user = User::find($user_id);
-    dd($user_id, $user);
+    $user = User::where('tg_id', $user_id)->first();
 
     $user->auth_token = $token;
     $user->save();
