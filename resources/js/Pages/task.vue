@@ -70,7 +70,7 @@ onMounted(() => {
                         <div v-for="task in taskStore.tasks" @click="useTaskModal.openModal(task)"
                             class="flex justify-between px-[18px] py-3 bg-gray rounded-[18px] items-center">
                             <div class="flex gap-[10px] items-center">
-                                <img class="w-[41px] h-max" :src="`/storage/${task.image}`" alt="">
+                                <img class="w-10" :src="`/storage/${task.image}`" alt="">
                                 <div class="flex flex-col gap-1">
                                     <span class="text-xs font-normal text-white">
                                         {{ task.title }}

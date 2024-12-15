@@ -16,6 +16,8 @@
     min-height: -webkit-fill-available;
 }
 
+
+
 .ellipse-blur {
     filter: blur(100px);
     @apply rounded-full opacity-60;

@@ -26,13 +26,14 @@ use App\Models\Shop;
 |
 */
 
-
-
+Route::get('/user/init', function () {
+    return view('init');
+});
 Route::get('/login/{token?}', function ($token = null) {
     $user_os = request()->header('User-Agent');
-    // if (strpos($user_os, 'Mobile') === false) {
-    //     return Inertia::render('mobile');
-    // }
+    if (strpos($user_os, 'Mobile') === false) {
+        return Inertia::render('mobile');
+    }
 
     if (!$token) {
         return 'Token is required';
@@ -158,8 +159,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/generate/token', function () {
-    $user_id = 1;
+Route::get('/generate/token/{user_id}', function ($user_id) {
     $token = bin2hex(random_bytes(16));
     $user = User::find($user_id);
     $user->auth_token = $token;
