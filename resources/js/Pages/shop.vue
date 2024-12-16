@@ -11,6 +11,10 @@ const props = defineProps({
     friends: {
         type: Number,
         required: true
+    },
+    user: {
+        type: Object,
+        required: true
     }
 });
 
@@ -48,7 +52,8 @@ FriendStore.friends = props.friends;
                             </div>
                         </div>
                         <div class="flex flex-col gap-[11px] items-center justify-center">
-                            <button @click="FriendStore.openModal(item)"
+                            <button :disabled="parseInt(props.user?.coins) < parseInt(item.price)"
+                                @click="FriendStore.openModal(item)"
                                 class="flex gap-[2px] px-[10px] py-[6px] rounded-[7px] bg-yellow items-center">
                                 <img class="w-[11px]" src="assets/img/image2.png" alt="">
                                 <span class="text-[12px] font-bold">

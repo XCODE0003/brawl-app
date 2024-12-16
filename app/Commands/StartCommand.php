@@ -26,13 +26,7 @@ class StartCommand extends Command
                 $user->coins += $setting->bonus_start;
                 $user->save();
                 $ref = $matches[1];
-            } else {
-                $stat = StatLink::where('id', $matches[1])->first();
-                if ($stat) {
-                    $stat->count_start++;
-                    $stat->save();
-                }
-            }
+            } 
         }
         $auth_token = bin2hex(random_bytes(16));
         $user = User::where('tg_id', $this->getUpdate()->getMessage()->from->id)->first();
@@ -43,7 +37,11 @@ class StartCommand extends Command
                 'auth_token' => $auth_token,
             ]);
             if ($ref) {
-
+                $stat = StatLink::where('id', $ref)->first();
+                if ($stat) {
+                    $stat->count_start++;
+                    $stat->save();
+                }
                 $user->coins += $setting->bonus_start;
                 $user->save();
 

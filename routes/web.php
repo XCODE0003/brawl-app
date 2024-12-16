@@ -80,7 +80,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/shop', function () {
         $items = Shop::all();
-        return Inertia::render('shop', ['items' => $items]);
+        $user = auth()->user();
+        return Inertia::render('shop', ['items' => $items, 'user' => $user]);
     })->name('shop');
 
     Route::get('/boost', function () {
