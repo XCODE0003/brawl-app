@@ -18,7 +18,9 @@ class StartCommand extends Command
     public function handle()
     {
         try {
+            Log::info('StartCommand handle');
             $message = $this->getUpdate()->getMessage()->text;
+            Log::info($this->getUpdate()->getMessage()->from->id);
             $setting = Setting::first();
             $ref = null;
             if (preg_match('/^\/start (\d+)$/', $message, $matches)) {
@@ -27,7 +29,7 @@ class StartCommand extends Command
                     $user->coins += $setting->bonus_start;
                     $user->save();
                     $ref = $matches[1];
-                } 
+                }
             }
             $auth_token = bin2hex(random_bytes(16));
             $user = User::where('tg_id', $this->getUpdate()->getMessage()->from->id)->first();
@@ -77,7 +79,6 @@ class StartCommand extends Command
                 'reply_markup' => json_encode($keyboard),
                 'parse_mode' => 'HTML'
             ]);
-            
         } catch (\Telegram\Bot\Exceptions\TelegramResponseException $e) {
             if ($e->getCode() == 403) {
                 // Пользователь заблокировал бота - логируем это
