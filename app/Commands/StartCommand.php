@@ -69,7 +69,8 @@ class StartCommand extends Command
                 ]
             ];
 
-            $this->replyWithMessage([
+            $this->getTelegram()->sendMessage([
+                'chat_id' => $this->getUpdate()->getMessage()->getChat()->getId(),
                 'text' => "<b>🎉 Добро пожаловать! 🎉</b>
 
 Это первый бот в телеграм по игре Brawl Stars, позволяющий тебе получить донат за клики!
