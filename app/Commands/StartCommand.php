@@ -68,6 +68,7 @@ class StartCommand extends Command
                     ]
                 ]
             ];
+
             $this->replyWithMessage([
                 'text' => "<b>🎉 Добро пожаловать! 🎉</b>
 
@@ -79,13 +80,14 @@ class StartCommand extends Command
                 'reply_markup' => json_encode($keyboard),
                 'parse_mode' => 'HTML'
             ]);
+            Log::info("Ответил пользователю");
         } catch (\Telegram\Bot\Exceptions\TelegramResponseException $e) {
             if ($e->getCode() == 403) {
                 // Пользователь заблокировал бота - логируем это
                 Log::info('User blocked bot: ' . $this->getUpdate()->getMessage()->from->id);
                 return;
             }
-            // Другие ошибки пробрасываем дальше
+            Log::error($e->getMessage());
             throw $e;
         }
     }
