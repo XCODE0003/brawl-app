@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="HandheldFriendly" content="true">
     <style>
-    html,
+    /* html,
     body {
         touch-action: manipulation;
         -ms-touch-action: manipulation;
@@ -24,19 +24,19 @@
 
     * {
         -webkit-tap-highlight-color: transparent;
-    }
+    } */
     </style>
     <script>
-    document.addEventListener('gesturestart', function(e) {
-        e.preventDefault();
-    });
-    document.addEventListener('touchmove', function(e) {
-        if (e.scale !== 1) {
-            e.preventDefault();
-        }
-    }, {
-        passive: false
-    });
+    // document.addEventListener('gesturestart', function(e) {
+    //     e.preventDefault();
+    // });
+    // document.addEventListener('touchmove', function(e) {
+    //     if (e.scale !== 1) {
+    //         e.preventDefault();
+    //     }
+    // }, {
+    //     passive: false
+    // });
 
     window.Telegram.WebApp.ready();
 

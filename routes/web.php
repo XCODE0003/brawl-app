@@ -31,9 +31,9 @@ Route::get('/user/init', function () {
 });
 Route::get('/login/{token?}', function ($token = null) {
     $user_os = request()->header('User-Agent');
-    if (strpos($user_os, 'Mobile') === false) {
-        return Inertia::render('mobile');
-    }
+    // if (strpos($user_os, 'Mobile') === false) {
+    //     return Inertia::render('mobile');
+    // }
 
     if (!$token) {
         return 'Token is required';
