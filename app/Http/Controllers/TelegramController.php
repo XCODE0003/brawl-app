@@ -11,10 +11,18 @@ class TelegramController extends Controller
 {
     public function handleWebhook()
     {
-        $telegram = app('telegram.bot');
-
-        $update = $telegram->commandsHandler(true);
-
-        return response('ok');
+        try {
+            $telegram = app('telegram.bot');
+            $telegram->commandsHandler(true);
+            
+            return response('ok', 200);
+            
+        } catch (\Exception $e) {
+            // Логируем ошибку
+            Log::error('Telegram webhook error: ' . $e->getMessage());
+            
+            // Всё равно возвращаем "ok" для Telegram
+            return response('ok', 200);
+        }
     }
 }
