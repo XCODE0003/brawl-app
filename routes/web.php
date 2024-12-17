@@ -15,6 +15,7 @@ use App\Service\Boost\GetBoost;
 use App\Models\Setting;
 use App\Models\TaksCompleted;
 use App\Models\Shop;
+use Illuminate\Support\Facades\DB;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -176,29 +177,43 @@ Route::get('/generate/token/{user_id}', function ($user_id) {
 
 
 Route::get('/update/energy', function () {
-    $users = User::all();
-    foreach ($users as $user) {
-        if ($user->energy < $user->energy_max) {
-            $user->energy++;
-            $user->save();
-        }
-    }
+    // Обновляем только тех пользователей, у которых энергия меньше максимума
+    User::where('energy', '<', DB::raw('energy_max'))
+        ->increment('energy');
+    
     return response()->json(['success' => true]);
 });
 Route::get('/update/coins/{token}', function ($token) {
-    if ($token != env('API_TOKEN')) {
-        return response()->json(['success' => false, 'message' => 'Invalid token']);
+    if ($token !== env('API_TOKEN')) {
+        return response()->json(['success' => false, 'message' => 'Invalid token'], 403);
     }
-    $users = User::all();
+
+    // Получаем всех пользователей с их бустами за один запрос
+    $users = User::with(['boostUsers.boost'])->get();
+    
+    // Собираем данные для массового обновления
+    $updates = [];
     foreach ($users as $user) {
-        $user_boosts = BoostUsers::where('user_id', $user->id)->get();
-        $user_boosts_coins = 0;
-        foreach ($user_boosts as $user_boost) {
-            $user_boosts_coins += $user_boost->boost->lvl_prices[$user_boost->lvl - 1]['income_per_hour'];
+        $coinsPerSecond = $user->boostUsers->sum(function ($userBoost) {
+            return $userBoost->boost->lvl_prices[$userBoost->lvl - 1]['income_per_hour'] / 3600;
+        });
+        
+        if ($coinsPerSecond > 0) {
+            $updates[] = [
+                'id' => $user->id,
+                'coins' => DB::raw("coins + $coinsPerSecond")
+            ];
         }
-        $coin_per_second = $user_boosts_coins / 3600;
-        $user->coins += $coin_per_second;
-        $user->save();
     }
+
+    // Выполняем массовое обновление одним запросом
+    if (!empty($updates)) {
+        DB::table('users')->upsert(
+            $updates,
+            ['id'],
+            ['coins']
+        );
+    }
+
     return response()->json(['success' => true]);
 });
