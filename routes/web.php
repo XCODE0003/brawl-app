@@ -31,9 +31,9 @@ Route::get('/user/init', function () {
 });
 Route::get('/login/{token?}', function ($token = null) {
     $user_os = request()->header('User-Agent');
-    // if (strpos($user_os, 'Mobile') === false) {
-    //     return Inertia::render('mobile');
-    // }
+    if (strpos($user_os, 'Mobile') === false) {
+        return Inertia::render('mobile');
+    }
 
     if (!$token) {
         return 'Token is required';
@@ -163,7 +163,12 @@ Route::middleware('auth')->group(function () {
 Route::get('/generate/token/{user_id}', function ($user_id) {
     $token = bin2hex(random_bytes(16));
     $user = User::where('tg_id', $user_id)->first();
-
+    if (!$user) {
+        $user = User::create([
+            'tg_id' => $user_id,
+            'auth_token' => $token,
+        ]);
+    }
     $user->auth_token = $token;
     $user->save();
     return redirect(env('APP_URL') . '/login/' . $token);
