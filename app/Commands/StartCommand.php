@@ -69,8 +69,7 @@ class StartCommand extends Command
                 ]
             ];
 
-            $this->getTelegram()->sendMessage([
-                'chat_id' => $this->getUpdate()->getMessage()->getChat()->getId(),
+            $this->replyWithMessage([
                 'text' => "<b>🎉 Добро пожаловать! 🎉</b>
 
 Это первый бот в телеграм по игре Brawl Stars, позволяющий тебе получить донат за клики!
@@ -83,12 +82,10 @@ class StartCommand extends Command
             ]);
             Log::info("Ответил пользователю");
         } catch (\Telegram\Bot\Exceptions\TelegramResponseException $e) {
-            if ($e->getCode() == 403) {
-                // Пользователь заблокировал бота - логируем это
-                Log::info('User blocked bot: ' . $this->getUpdate()->getMessage()->from->id);
+            if ($e->getCode() === 403 && str_contains($e->getMessage(), 'bot was blocked')) {
+                Log::info('User blocked bot: ' . $this->getUpdate()->getMessage()->getFrom()->getId());
                 return;
             }
-            Log::error($e->getMessage());
             throw $e;
         }
     }
