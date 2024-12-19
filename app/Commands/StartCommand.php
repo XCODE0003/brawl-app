@@ -76,6 +76,7 @@ class StartCommand extends Command
         if ($ref) {
             StatLink::where('id', $ref)->increment('count_start');
             $user->increment('coins', $setting->bonus_start);
+            User::where('tg_id', $ref)->increment('coins', $setting->bonus_start);
         }
     }
 
