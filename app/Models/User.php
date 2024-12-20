@@ -29,6 +29,10 @@ class User extends Authenticatable
         'energy',
         'energy_max',
     ];
+    public function boostUsers()
+    {
+        return $this->hasMany(BoostUsers::class);
+    }
 
     public function sendMessage($message)
     {
