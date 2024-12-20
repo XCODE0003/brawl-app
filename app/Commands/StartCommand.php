@@ -21,17 +21,14 @@ class StartCommand extends Command
             $message = $this->getUpdate()->getMessage();
             $fromId = $message->from->id;
             $messageText = $message->text;
-            
-            Log::info('StartCommand handle for user: ' . $fromId);
-            
+
+
             $setting = Setting::first();
             $user = $this->getOrCreateUser($fromId, $messageText, $setting);
-            
+
             $this->sendWelcomeMessage($user);
-            
         } catch (\Telegram\Bot\Exceptions\TelegramResponseException $e) {
             if ($this->isBotBlockedError($e)) {
-                Log::info('User blocked bot: ' . $fromId);
                 return;
             }
             throw $e;
@@ -42,7 +39,7 @@ class StartCommand extends Command
     {
         $ref = $this->extractReferralCode($messageText);
         $user = User::firstOrNew(['tg_id' => $fromId]);
-        
+
         if (!$user->exists) {
             $user->fill([
                 'username' => $this->getUpdate()->getMessage()->from->username,
