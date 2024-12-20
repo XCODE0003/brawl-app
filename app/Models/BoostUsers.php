@@ -10,6 +10,8 @@ class BoostUsers extends Model
 {
     use HasFactory;
 
+    protected $table = 'boost_users';
+
     protected $fillable = [
         'user_id',
         'boost_id',

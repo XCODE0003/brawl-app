@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use App\Models\BoostUsers;
 
 class User extends Authenticatable
 {

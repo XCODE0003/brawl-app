@@ -177,10 +177,9 @@ Route::get('/generate/token/{user_id}', function ($user_id) {
 
 
 Route::get('/update/energy', function () {
-    // Обновляем только тех пользователей, у которых энергия меньше максимума
     User::where('energy', '<', DB::raw('energy_max'))
         ->increment('energy');
-    
+
     return response()->json(['success' => true]);
 });
 Route::get('/update/coins/{token}', function ($token) {
@@ -190,14 +189,14 @@ Route::get('/update/coins/{token}', function ($token) {
 
     // Получаем всех пользователей с их бустами за один запрос
     $users = User::with(['boostUsers.boost'])->get();
-    
+
     // Собираем данные для массового обновления
     $updates = [];
     foreach ($users as $user) {
         $coinsPerSecond = $user->boostUsers->sum(function ($userBoost) {
             return $userBoost->boost->lvl_prices[$userBoost->lvl - 1]['income_per_hour'] / 3600;
         });
-        
+
         if ($coinsPerSecond > 0) {
             $updates[] = [
                 'id' => $user->id,
