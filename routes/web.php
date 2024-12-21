@@ -31,10 +31,13 @@ Route::get('/user/init', function () {
     return view('init');
 });
 Route::get('/login/{token?}', function ($token = null) {
+    if (auth()->check()) {
+        return redirect('/');
+    }
     $user_os = request()->header('User-Agent');
-    // if (strpos($user_os, 'Mobile') === false) {
-    //     return Inertia::render('mobile');
-    // }
+    if (strpos($user_os, 'Mobile') === false) {
+        return Inertia::render('mobile');
+    }
 
     if (!$token) {
         return 'Token is required';
