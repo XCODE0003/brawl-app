@@ -150,6 +150,7 @@ Route::middleware('auth')->group(function () {
     })->name('boost.buy');
 
     Route::post('/tap', function (Request $request) {
+        return response()->json(['success' => true]);
         $tap_count = $request->input('tap_count');
         $user = auth()->user();
         $user->coins += $tap_count;
