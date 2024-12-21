@@ -32,9 +32,9 @@ Route::get('/user/init', function () {
 });
 Route::get('/login/{token?}', function ($token = null) {
     $user_os = request()->header('User-Agent');
-    if (strpos($user_os, 'Mobile') === false) {
-        return Inertia::render('mobile');
-    }
+    // if (strpos($user_os, 'Mobile') === false) {
+    //     return Inertia::render('mobile');
+    // }
 
     if (!$token) {
         return 'Token is required';
@@ -150,7 +150,6 @@ Route::middleware('auth')->group(function () {
     })->name('boost.buy');
 
     Route::post('/tap', function (Request $request) {
-        return response()->json(['success' => true]);
         $tap_count = $request->input('tap_count');
         $user = auth()->user();
         $user->coins += $tap_count;
