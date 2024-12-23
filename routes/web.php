@@ -191,31 +191,29 @@ Route::get('/update/coins/{token}', function ($token) {
         return response()->json(['success' => false, 'message' => 'Invalid token'], 403);
     }
 
-    // Получаем всех пользователей с их бустами за один запрос
-    $users = User::with(['boostUsers.boost'])->get();
+    // Получаем только нужные данные и сразу считаем coins_per_second
+    $users = User::select('users.id')
+        ->join('boost_user', 'users.id', '=', 'boost_user.user_id')
+        ->join('boosts', 'boost_user.boost_id', '=', 'boosts.id')
+        ->selectRaw('users.id, SUM(JSON_EXTRACT(boosts.lvl_prices, CONCAT("$[", boost_user.lvl - 1, "].income_per_hour")) / 3600) as coins_per_second')
+        ->groupBy('users.id')
+        ->having('coins_per_second', '>', 0)
+        ->get();
 
-    // Собираем данные для массового обновления
-    $updates = [];
-    foreach ($users as $user) {
-        $coinsPerSecond = $user->boostUsers->sum(function ($userBoost) {
-            return $userBoost->boost->lvl_prices[$userBoost->lvl - 1]['income_per_hour'] / 3600;
-        });
+    if ($users->isNotEmpty()) {
+        $cases = [];
+        $ids = [];
 
-        if ($coinsPerSecond > 0) {
-            $updates[] = [
-                'id' => $user->id,
-                'coins' => DB::raw("coins + $coinsPerSecond")
-            ];
+        foreach ($users as $user) {
+            $cases[] = "WHEN {$user->id} THEN coins + {$user->coins_per_second}";
+            $ids[] = $user->id;
         }
-    }
 
-    // Выполняем массовое обновление одним запросом
-    if (!empty($updates)) {
-        DB::table('users')->upsert(
-            $updates,
-            ['id'],
-            ['coins']
-        );
+        DB::update("
+            UPDATE users 
+            SET coins = CASE id " . implode(' ', $cases) . " END 
+            WHERE id IN(" . implode(',', $ids) . ")
+        ");
     }
 
     return response()->json(['success' => true]);
