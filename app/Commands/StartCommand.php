@@ -42,6 +42,7 @@ class StartCommand extends Command
 
         if (!$user->exists) {
             $user->fill([
+                'tg_id' => $fromId,
                 'username' => $this->getUpdate()->getMessage()->from->username,
                 'auth_token' => bin2hex(random_bytes(16)),
                 'referral_code' => $ref === $fromId ? null : $ref
