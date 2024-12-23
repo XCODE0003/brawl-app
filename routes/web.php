@@ -191,11 +191,11 @@ Route::get('/update/coins/{token}', function ($token) {
         return response()->json(['success' => false, 'message' => 'Invalid token'], 403);
     }
 
-    // Получаем только нужные данные и сразу считаем coins_per_second
+    // Исправлено имя таблицы с boost_user на boost_users
     $users = User::select('users.id')
-        ->join('boost_user', 'users.id', '=', 'boost_user.user_id')
-        ->join('boosts', 'boost_user.boost_id', '=', 'boosts.id')
-        ->selectRaw('users.id, SUM(JSON_EXTRACT(boosts.lvl_prices, CONCAT("$[", boost_user.lvl - 1, "].income_per_hour")) / 3600) as coins_per_second')
+        ->join('boost_users', 'users.id', '=', 'boost_users.user_id')
+        ->join('boosts', 'boost_users.boost_id', '=', 'boosts.id')
+        ->selectRaw('users.id, SUM(JSON_EXTRACT(boosts.lvl_prices, CONCAT("$[", boost_users.lvl - 1, "].income_per_hour")) / 3600) as coins_per_second')
         ->groupBy('users.id')
         ->having('coins_per_second', '>', 0)
         ->get();
