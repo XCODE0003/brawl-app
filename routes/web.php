@@ -181,40 +181,51 @@ Route::get('/generate/token/{user_id}', function ($user_id) {
 
 
 Route::get('/update/energy', function () {
-    User::where('energy', '<', DB::raw('energy_max'))
-        ->increment('energy');
-
-    return response()->json(['success' => true]);
+    try {
+        User::where('energy', '<', DB::raw('energy_max'))
+            ->increment('energy');
+            
+        DB::disconnect();
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        DB::disconnect();
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    }
 });
 Route::get('/update/coins/{token}', function ($token) {
     if ($token !== env('API_TOKEN')) {
         return response()->json(['success' => false, 'message' => 'Invalid token'], 403);
     }
 
-    // Исправлено имя таблицы с boost_user на boost_users
-    $users = User::select('users.id')
-        ->join('boost_users', 'users.id', '=', 'boost_users.user_id')
-        ->join('boosts', 'boost_users.boost_id', '=', 'boosts.id')
-        ->selectRaw('users.id, SUM(JSON_EXTRACT(boosts.lvl_prices, CONCAT("$[", boost_users.lvl - 1, "].income_per_hour")) / 3600) as coins_per_second')
-        ->groupBy('users.id')
-        ->having('coins_per_second', '>', 0)
-        ->get();
+    try {
+        $users = User::select('users.id')
+            ->join('boost_users', 'users.id', '=', 'boost_users.user_id')
+            ->join('boosts', 'boost_users.boost_id', '=', 'boosts.id')
+            ->selectRaw('users.id, SUM(JSON_EXTRACT(boosts.lvl_prices, CONCAT("$[", boost_users.lvl - 1, "].income_per_hour")) / 3600) as coins_per_second')
+            ->groupBy('users.id')
+            ->having('coins_per_second', '>', 0)
+            ->get();
 
-    if ($users->isNotEmpty()) {
-        $cases = [];
-        $ids = [];
+        if ($users->isNotEmpty()) {
+            $cases = [];
+            $ids = [];
 
-        foreach ($users as $user) {
-            $cases[] = "WHEN {$user->id} THEN coins + {$user->coins_per_second}";
-            $ids[] = $user->id;
+            foreach ($users as $user) {
+                $cases[] = "WHEN {$user->id} THEN coins + {$user->coins_per_second}";
+                $ids[] = $user->id;
+            }
+
+            DB::update("
+                UPDATE users 
+                SET coins = CASE id " . implode(' ', $cases) . " END 
+                WHERE id IN(" . implode(',', $ids) . ")
+            ");
         }
 
-        DB::update("
-            UPDATE users 
-            SET coins = CASE id " . implode(' ', $cases) . " END 
-            WHERE id IN(" . implode(',', $ids) . ")
-        ");
+        DB::disconnect();
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        DB::disconnect();
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
     }
-
-    return response()->json(['success' => true]);
 });
