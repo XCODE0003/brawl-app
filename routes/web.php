@@ -16,6 +16,7 @@ use App\Models\Setting;
 use App\Models\TaksCompleted;
 use App\Models\Shop;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -180,24 +181,19 @@ Route::get('/generate/token/{user_id}', function ($user_id) {
 });
 
 
-Route::get('/update/energy', function () {
-    try {
-        User::where('energy', '<', DB::raw('energy_max'))
-            ->increment('energy');
-            
-        DB::disconnect();
-        return response()->json(['success' => true]);
-    } catch (\Exception $e) {
-        DB::disconnect();
-        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-    }
-});
 Route::get('/update/coins/{token}', function ($token) {
     if ($token !== env('API_TOKEN')) {
         return response()->json(['success' => false, 'message' => 'Invalid token'], 403);
     }
 
     try {
+        // Добавляем блокировку
+        $lock = Cache::lock('update_coins', 10);
+        
+        if (!$lock->get()) {
+            return response()->json(['success' => false, 'message' => 'Process already running']);
+        }
+
         $users = User::select('users.id')
             ->join('boost_users', 'users.id', '=', 'boost_users.user_id')
             ->join('boosts', 'boost_users.boost_id', '=', 'boosts.id')
@@ -207,24 +203,55 @@ Route::get('/update/coins/{token}', function ($token) {
             ->get();
 
         if ($users->isNotEmpty()) {
-            $cases = [];
-            $ids = [];
+            DB::transaction(function () use ($users) {
+                $cases = [];
+                $ids = [];
 
-            foreach ($users as $user) {
-                $cases[] = "WHEN {$user->id} THEN coins + {$user->coins_per_second}";
-                $ids[] = $user->id;
-            }
+                foreach ($users as $user) {
+                    $cases[] = "WHEN {$user->id} THEN coins + {$user->coins_per_second}";
+                    $ids[] = $user->id;
+                }
 
-            DB::update("
-                UPDATE users 
-                SET coins = CASE id " . implode(' ', $cases) . " END 
-                WHERE id IN(" . implode(',', $ids) . ")
-            ");
+                DB::update("
+                    UPDATE users 
+                    SET coins = CASE id " . implode(' ', $cases) . " END 
+                    WHERE id IN(" . implode(',', $ids) . ")
+                ");
+            });
         }
 
+        $lock->release();
         DB::disconnect();
         return response()->json(['success' => true]);
     } catch (\Exception $e) {
+        if (isset($lock)) {
+            $lock->release();
+        }
+        DB::disconnect();
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    }
+});
+
+Route::get('/update/energy', function () {
+    try {
+        $lock = Cache::lock('update_energy', 10);
+        
+        if (!$lock->get()) {
+            return response()->json(['success' => false, 'message' => 'Process already running']);
+        }
+
+        DB::transaction(function () {
+            User::where('energy', '<', DB::raw('energy_max'))
+                ->increment('energy');
+        });
+
+        $lock->release();
+        DB::disconnect();
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        if (isset($lock)) {
+            $lock->release();
+        }
         DB::disconnect();
         return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
     }
